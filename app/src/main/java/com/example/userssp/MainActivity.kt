@@ -1,6 +1,7 @@
 package com.example.userssp
 
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Binder
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cursosant.android.userssp.User
 import com.example.userssp.databinding.ActivityMainBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class MainActivity : AppCompatActivity(), OnClickListener {
 
@@ -29,8 +31,15 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         val isFirstTime = preferences.getBoolean(getString(R.string.sp_firs_time), true)
         Log.i("SP", "${getString(R.string.sp_firs_time)} = $isFirstTime")
 
-        preferences.edit().putBoolean(getString(R.string.sp_firs_time), false).commit()
-
+        if (isFirstTime) {
+            MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.dialog_title)
+                .setPositiveButton(R.string.dialog_confirm, { dialogInterface, i ->
+                    preferences.edit().putBoolean(getString(R.string.sp_firs_time), false).commit()
+                })
+                .setNegativeButton("Cancelar", null)
+                .show()
+        }
         userAdapter = UserAdapter(getUsers(), this)
         linearLayoutManager = LinearLayoutManager(this)
 
