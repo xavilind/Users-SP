@@ -4,12 +4,13 @@ import android.os.Binder
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cursosant.android.userssp.User
 import com.example.userssp.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnClickListener {
 
     private lateinit var userAdapter: UserAdapter
     private lateinit var linearLayoutManager: RecyclerView.LayoutManager
@@ -21,10 +22,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        userAdapter = UserAdapter(getUsers())
+        userAdapter = UserAdapter(getUsers(), this)
         linearLayoutManager = LinearLayoutManager(this)
 
         binding.recyclerView.apply {
+            setHasFixedSize(true)
             layoutManager = linearLayoutManager
             adapter = userAdapter
         }
@@ -33,7 +35,7 @@ class MainActivity : AppCompatActivity() {
     private fun getUsers() : MutableList<User>{
         val users = mutableListOf<User>()
 
-        val alain = User(1, "Alain", "Nicoñas", "https://frogames.es/wp-content/uploads/2020/09/alain-1.jpg")
+        val alain = User(1, "Alain", "Nicolás", "https://frogames.es/wp-content/uploads/2020/09/alain-1.jpg")
         val samanta = User(2, "Samanta", "Meza", "https://th.bing.com/th/id/OIP.3-J22sQnrvvu8fWUTkF_HwHaHe?pid=ImgDet&rs=1")
         val javier = User(3, "javier", "Gómez", "https://th.bing.com/th/id/R.0490dc500a5a4452453835af5fd63caa?rik=LzpNekjmDVr6Aw&pid=ImgRaw&r=0")
         val emma = User(4, "Emma", "Cruz", "https://th.bing.com/th/id/R.94892876995acd02699805b5fda8cf6a?rik=GbiS1yjDvGdkVA&pid=ImgRaw&r=0")
@@ -52,5 +54,9 @@ class MainActivity : AppCompatActivity() {
         users.add(emma)
 
         return users
+    }
+
+    override fun OnClick(user: User, position: Int) {
+        Toast.makeText(this, "$position: ${user.getFullname()}", Toast.LENGTH_SHORT).show()
     }
 }
